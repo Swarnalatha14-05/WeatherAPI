@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeatherAPI</title>
+    <style>
+      body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: url(images/nature.jpg);
+}
+
+.api {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  padding: 20px;
+  background: #ffffff;
+  color: #4682B4;
+  border-radius: 10px;
+  max-width: 400px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.api h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.api input[type="text"] {
+  width: 80%;
+  padding: 10px;
+  font-size: 1rem;
+  border: 2px solid #4682B4;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
+
+.api button {
+  background-color: #4682B4;
+  color: #fff;
+  font-size: 1rem;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.api button:hover {
+  background-color: #1E90FF;
+}
+
+
+    </style>
+</head>
+<body>
+  <div class="api"> 
+    <h1>Weather App</h1>
+    <input type="text" id="city" placeholder="Enter city name">
+    <button id="fetchWeather">Get Weather</button>
+  </div>
+    <div id="weatherData"></div>
+
+ <script>
+        const apiKey = "b8a28d619bd54bb9a3943622242911";
+        const apiUrl = "http://api.weatherapi.com/v1/current.json";
+        async function fetchWeather(city){
+  try{
+    const fullUrl = `${apiUrl}?key=${apiKey}&q=${encodeURIComponent(city)}`;
+      const response = await fetch(fullUrl);
+  if(!response.ok){
+  throw new Error(`Error: ${response.status} ${response.statusText}`);
+}
+const data = await response.json();
+document.getElementById("weatherData").innerHTML = `
+<h2> ${data.location.name}, ${data.location.country} </h2>
+<p> Temperature : ${data.current.temp_c}C</p>
+<p>Condition: ${data.current.condition.text}</p>
+<img src="https:${data.current.condition.icon}" alt="weatherimg icon">
+`;
+}catch(error){
+console.error("failed to fetch weather data:" , error)
+}
+}
+document.getElementById('fetchWeather').addEventListener('click', () => {
+const city = document.getElementById('city').value;
+fetchWeather(city);
+});
+    </script>
+</html>
